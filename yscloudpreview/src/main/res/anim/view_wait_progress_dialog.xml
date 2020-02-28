@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:ignore="ResourceName">
+    <!--android:fromDegrees 起始的角度度数
+        android:toDegrees 结束的角度度数
+        android:pivotX 旋转中心的X坐标
+        android:pivotY 旋转中心的Y坐标
+        android:duration 表示从android:fromDegrees转动到android:toDegrees所花费的时间
+        android:interpolator表示变化率，但不是运行速度
+        android:repeatCount 重复的次数，默认为0，必须是int，可以为-1表示不停止
+     -->
+    <rotate android:fromDegrees="0"
+            android:toDegrees="359"
+            android:pivotX="50%"
+            android:pivotY="50%"
+            android:duration="1000"
+            android:repeatCount="-1"/>
+
+
+</set>

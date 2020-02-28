@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <dimen name="f20" tools:ignore="ResourceName">20sp</dimen>
+    <dimen name="dim8dp" tools:ignore="ResourceName">8dp</dimen>
+    <dimen name="dim10dp" tools:ignore="ResourceName">10dp</dimen>
+    <dimen name="dim20dp" tools:ignore="ResourceName">20dp</dimen>
+    <dimen name="dim15dp" tools:ignore="ResourceName">15dp</dimen>
+    <dimen name="dim16dp" tools:ignore="ResourceName">16dp</dimen>
+    <dimen name="dim18dp" tools:ignore="ResourceName">18dp</dimen>
+    <dimen name="dim44dp" tools:ignore="ResourceName">44dp</dimen>
+    <dimen name="dim5dp" tools:ignore="ResourceName">5dp</dimen>
+    <dimen name="f18" tools:ignore="ResourceName">18sp</dimen>
+    <dimen name="f17" tools:ignore="ResourceName">17sp</dimen>
+    <dimen name="dim300dp" tools:ignore="ResourceName">300dp</dimen>
+    <dimen name="dim350dp" tools:ignore="ResourceName">350dp</dimen>
+    <dimen name="dim162dp" tools:ignore="ResourceName">162dp</dimen>
+    <dimen name="dim30dp" tools:ignore="ResourceName">30dp</dimen>
+    <dimen name="f16" tools:ignore="ResourceName">16sp</dimen>
+    <dimen name="f15" tools:ignore="ResourceName">15sp</dimen>
+    <dimen name="f14" tools:ignore="ResourceName">14sp</dimen>
+    <dimen name="dim40dp" tools:ignore="ResourceName">40dp</dimen>
+    <dimen name="dim45dp" tools:ignore="ResourceName">45dp</dimen>
+    <dimen name="dim35dp" tools:ignore="ResourceName">35dp</dimen>
+    <dimen name="dim55dp" tools:ignore="ResourceName">55dp</dimen>
+    <dimen name="dim110dp" tools:ignore="ResourceName">110dp</dimen>
+    <dimen name="dim118dp" tools:ignore="ResourceName">118dp</dimen>
+    <dimen name="dim31dp" tools:ignore="ResourceName">31dp</dimen>
+
+    <dimen name="dim290dp" tools:ignore="ResourceName">290dp</dimen>
+    <dimen name="dim186dp" tools:ignore="ResourceName">186dp</dimen>
+    <dimen name="dim202dp" tools:ignore="ResourceName">202dp</dimen>
+    <dimen name="dim13dp">13dp</dimen>
+    <dimen name="dim1dp">1dp</dimen>
+    <dimen name="dim50dp">50dp</dimen>
+</resources>

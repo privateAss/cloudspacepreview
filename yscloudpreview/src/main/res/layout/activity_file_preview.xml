@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:ignore="ResourceName">
+
+    <LinearLayout
+        android:id="@+id/ll_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dim45dp"
+        android:background="@color/title_bg"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_number"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/dim20dp"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:textColor="@color/text_color_white"
+            android:textSize="@dimen/f15"
+            tools:text="1/4" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:singleLine="true"
+            android:paddingStart="@dimen/dim5dp"
+            android:paddingEnd="@dimen/dim5dp"
+            android:textColor="@color/text_color_white"
+            android:textSize="@dimen/f15"
+            tools:text="语文教学资料" />
+
+        <ImageView
+            android:id="@+id/iv_close"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingRight="@dimen/dim15dp"
+            android:src="@mipmap/ic_close" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/content_bg"
+        android:gravity="center"
+        android:orientation="vertical">
+        <!--图片-->
+        <com.github.chrisbanes.photoview.PhotoView
+            android:id="@+id/photo_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+        <!--doc文件-->
+        <com.ys100.yscloudpreview.view.X5WebView
+            android:id="@+id/x5_web"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+        </com.ys100.yscloudpreview.view.X5WebView>
+
+        <!--视频及音频-->
+        <FrameLayout
+            android:id="@+id/fl_play"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/iv_thumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
+            <ImageView
+                android:id="@+id/iv_play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@mipmap/video_btn_play" />
+        </FrameLayout>
+
+        <!--出错误-->
+        <LinearLayout
+            android:id="@+id/ll_error"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/default_icon_loading" />
+
+            <TextView
+                android:id="@+id/tv_msg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/dim13dp"
+                android:textColor="@color/text_color_white"
+                android:textSize="@dimen/f14"
+                tools:text="内容加载失败，请重新加载！" />
+
+            <Button
+                android:id="@+id/bt_reload"
+                android:layout_width="@dimen/dim110dp"
+                android:layout_height="@dimen/dim35dp"
+                android:layout_marginTop="@dimen/dim35dp"
+                android:background="@drawable/shape_reload_bg"
+                android:text="重新加载"
+                android:textColor="@color/text_color_white"
+                android:textSize="@dimen/f14" />
+
+        </LinearLayout>
+        <!--进度条-->
+
+        <ImageView
+            android:id="@+id/iv_loading"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_loading"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dim50dp"
+        android:background="#222222"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/iv_left_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/dim35dp"
+            android:src="@mipmap/ic_arrowl_n" />
+
+        <ImageView
+            android:id="@+id/iv_right_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dim35dp"
+            android:src="@mipmap/ic_arrowr_n" />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
