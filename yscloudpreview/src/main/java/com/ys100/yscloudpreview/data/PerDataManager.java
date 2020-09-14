@@ -2,7 +2,6 @@ package com.ys100.yscloudpreview.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Environment;
 
 import com.tencent.mmkv.MMKV;
 import com.ys100.yscloudpreview.utils.CommonUtils;
@@ -13,11 +12,11 @@ import com.ys100.yscloudpreview.utils.CommonUtils;
  * Date: 2020/2/24
  * Description:
  */
-public class DataManager implements SpHelper {
+public class PerDataManager implements SpHelper {
     private SpHelper spHelper;
     private MMKV previewCacheMMKV;
 
-    private DataManager() {
+    private PerDataManager() {
         spHelper = new PreferenceIml();
         initMMKV();
     }
@@ -53,10 +52,10 @@ public class DataManager implements SpHelper {
     }
 
     private static class DataHolder {
-        private static DataManager holder = new DataManager();
+        private static PerDataManager holder = new PerDataManager();
     }
 
-    public static DataManager getInstance() {
+    public static PerDataManager getInstance() {
         return DataHolder.holder;
     }
 

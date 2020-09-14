@@ -2,10 +2,8 @@ package com.ys100.cloudspacepreview;
 
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
-
-import com.ys100.yscloudpreview.PreViewFileActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,6 +14,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClick(View mView){
-        PreViewFileActivity.startPreViewFileActivity(this,"","");
+        //PreViewFileActivity.startPreViewFileActivity(this,"","");
     }
 }

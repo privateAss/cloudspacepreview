@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
@@ -24,20 +24,24 @@ import com.tencent.smtt.export.external.interfaces.WebResourceRequest;
 import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
-import com.uzmap.pkg.openapi.SuperWebview;
 import com.ys100.yscloudpreview.base.BaseYsActivity;
+import com.ys100.yscloudpreview.bean.EventData;
 import com.ys100.yscloudpreview.bean.FilePreviewBean;
-import com.ys100.yscloudpreview.bean.WebViewEvent;
-import com.ys100.yscloudpreview.listener.ActivityAddOrRemoveListener;
-import com.ys100.yscloudpreview.listener.Html5ReceiveListener;
-import com.ys100.yscloudpreview.manager.SuperWebManager;
+import com.ys100.yscloudpreview.bean.EventToName;
+import com.ys100.yscloudpreview.bean.PreviewCacheBean;
+import com.ys100.yscloudpreview.data.PreviewCacheManager;
+import com.ys100.yscloudpreview.listener.SendEventToHtml5Listener;
+import com.ys100.yscloudpreview.manager.EventDataObserVer;
+import com.ys100.yscloudpreview.manager.YsPreViewEngine;
 import com.ys100.yscloudpreview.utils.FilePreviewIntentFactory;
 import com.ys100.yscloudpreview.utils.GlideHelper;
 import com.ys100.yscloudpreview.utils.GsonHelper;
-import com.ys100.yscloudpreview.view.X5WebView;
-
+import com.ys100.yscloudpreview.view.X5PerWebView;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Author 邓杰
@@ -45,7 +49,7 @@ import org.json.JSONObject;
  * Date: 2020/2/21
  * Description:
  */
-public class PreViewFileActivity extends BaseYsActivity implements Html5ReceiveListener, View.OnClickListener , RequestListener<Bitmap> {
+public class PreViewFileActivity extends BaseYsActivity implements View.OnClickListener, RequestListener<Bitmap>,Observer {
     /**
      * 跳转到预览文件界面并且传递必要的参数
      *
@@ -53,17 +57,20 @@ public class PreViewFileActivity extends BaseYsActivity implements Html5ReceiveL
      * @param preViewJson 预览文件的json
      * @param pageName    预览页面的别名  （例如 个人空间/群组空间等等）
      */
-    public static void startPreViewFileActivity(Context context, String preViewJson, String pageName) {
+    public static void startPreViewFileActivity(Context context, String preViewJson, String pageName, String baseIp) {
         //传递数据
         Bundle mBundle = new Bundle();
-        mBundle.putString("previewJson", preViewJson);
+        mBundle.putString(PAGE_PREVIEW_JSON, preViewJson);
         mBundle.putString(PAGE_NAME_KEY, pageName);
+        mBundle.putString(APP_BASE_IP, baseIp);
         Intent intent = new Intent(context, PreViewFileActivity.class);
         intent.putExtras(mBundle);
         context.startActivity(intent);
     }
 
     public final static String PAGE_NAME_KEY = "pageName";
+    public final static String PAGE_PREVIEW_JSON = "previewJson";
+    public final static String APP_BASE_IP = "baseIp";
     private FilePreviewBean mPreviewBean;//预览文件的实体
     private int total;//文件的总数
 
@@ -75,7 +82,7 @@ public class PreViewFileActivity extends BaseYsActivity implements Html5ReceiveL
     private ImageView iv_left_next;
     private ImageView iv_right_next;
     private PhotoView photo_view;
-    private X5WebView x5_web;
+    private X5PerWebView x5_web;
 
     /********视频/音频**********/
     private FrameLayout fl_paly;
@@ -91,10 +98,11 @@ public class PreViewFileActivity extends BaseYsActivity implements Html5ReceiveL
     private ImageView iv_loading;
     private Animation mAnimation;
     private String pageName;
+    private String baseIp;
 
     @Override
     protected int getResLayoutId() {
-        return R.layout.activity_file_preview;
+        return R.layout.activity_preview_file;
     }
 
     @Override
@@ -128,14 +136,18 @@ public class PreViewFileActivity extends BaseYsActivity implements Html5ReceiveL
 
     @Override
     protected void initData() {
+        EventDataObserVer.getInstance().addObserver(this);
         x5_web.setChromeClient(chromeClient).setClient(mViewClient);
         mAnimation = FilePreviewIntentFactory.animation(this);
         Intent intent = getIntent();
         if (intent.hasExtra(PAGE_NAME_KEY)) {
             pageName = intent.getStringExtra(PAGE_NAME_KEY);
         }
-        if (intent.hasExtra("previewJson")) {
-            String previewJsons = intent.getStringExtra("previewJson");
+        if (intent.hasExtra(APP_BASE_IP)) {
+            baseIp = intent.getStringExtra(APP_BASE_IP);
+        }
+        if (intent.hasExtra(PAGE_PREVIEW_JSON)) {
+            String previewJsons = intent.getStringExtra(PAGE_PREVIEW_JSON);
             if (TextUtils.isEmpty(previewJsons)) return;
             mPreviewBean = GsonHelper.toObject(previewJsons, FilePreviewBean.class);
             if (mPreviewBean != null) {
@@ -151,6 +163,11 @@ public class PreViewFileActivity extends BaseYsActivity implements Html5ReceiveL
                 }
             }
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     private void setTitleAndNumber(FilePreviewBean bean, int mCurrentCurson) {
@@ -169,20 +186,6 @@ public class PreViewFileActivity extends BaseYsActivity implements Html5ReceiveL
             iv_right_next.setEnabled(false);
         }
 
-    }
-
-    /**
-     * 收到H5发送的事件
-     *
-     * @param event 事件名
-     * @param o     对象
-     */
-    @Override
-    public void onReceive(String event, Object o) {
-        if(TextUtils.isEmpty(event))return;
-        switch (event){
-
-        }
     }
 
     @Override
@@ -218,17 +221,21 @@ public class PreViewFileActivity extends BaseYsActivity implements Html5ReceiveL
         JSONObject object = new JSONObject();
         try {
             object.put("currIndex", cursor);
-            object.put("pageName", pageName);
-            SuperWebManager.getInstance().setH5Event(WebViewEvent.EVENT_CHANGENATIVEPREVIEWPAGE, object);
+            object.put(PAGE_NAME_KEY, pageName);
+            SendEventToHtml5Listener listener = YsPreViewEngine.getInstance().getHtml5Listener();
+            if (listener != null) {
+                listener.sendEventToHtml5(EventToName.EVENT_CHANGENATIVEPREVIEWPAGE, object);
+            }
         } catch (JSONException e) {
             if (mPreviewBean != null) {
                 mPreviewBean.setCurrIndex(cursor);
-                mPreviewBean.setError("加载失败");
+                mPreviewBean.setError("发送事件失败");
                 mPreviewBean.setStatus("error");
                 previewControl(mPreviewBean);
             }
         }
     }
+
 
     /**
      * 预览控制
@@ -248,7 +255,7 @@ public class PreViewFileActivity extends BaseYsActivity implements Html5ReceiveL
             } else if (previewBean.isVideoOrAudio()) {//视频及音频
                 fl_paly.setVisibility(View.VISIBLE);
                 stopLoading();
-                GlideHelper.loadRoundImageByListener(this, previewBean.getUrl(), iv_thumbnail, this, true);
+                GlideHelper.loadRoundVideoByListener(this, previewBean.getUrl(), iv_thumbnail, this, true);
             } else {
                 onLoadingError();
             }
@@ -338,6 +345,69 @@ public class PreViewFileActivity extends BaseYsActivity implements Html5ReceiveL
         if (x5_web != null) {
             x5_web.destroy();
         }
+        EventDataObserVer.getInstance().removeObserver(this);
         super.onDestroy();
     }
+    @Override
+    public void update(Observable o, Object arg) {
+        if(arg != null && arg instanceof EventData){
+            handleEvent((EventData) arg);
+        }
+    }
+    public void handleEvent(EventData data) {
+        String url = "";
+        String uuid ="";
+        try {
+            String eventName = data.getEventName();
+            JSONObject object = data.getObject();
+            if (TextUtils.isEmpty(eventName) || object == null) return;
+            switch (eventName) {
+                case EventToName.EVENT_CALLNATIVEPREVIEWCHANGEPAGE:
+                    //真正返回预览url/数据的事件
+                    pageName = object.getString(PAGE_NAME_KEY);
+                    mPreviewBean = GsonHelper.toObject(object.toString(), FilePreviewBean.class);
+                    mPreviewBean.setStatus(FilePreviewBean.SUCCESS);
+                    if (mPreviewBean != null) {
+                        setTitleAndNumber(mPreviewBean, currentCursor);
+                        previewControl(mPreviewBean);
+                    }
+                    break;
+                case EventToName.EVENT_CALLNATIVEPREVIEWSHOWERROR:
+                    //返回出错的事件
+                    mPreviewBean = GsonHelper.toObject(object.toString(), FilePreviewBean.class);
+                    mPreviewBean.setStatus(FilePreviewBean.UNSUCCESS);
+                    if (mPreviewBean != null) {
+                        setTitleAndNumber(mPreviewBean, currentCursor);
+                        previewControl(mPreviewBean);
+                    }
+                    break;
+                case EventToName.EVENT_READPREVIEWCACHEURL:
+                    //读取缓存
+                    uuid = object.getString("uuid");
+                    pageName = object.getString(PAGE_NAME_KEY);
+                    PreviewCacheBean preViewCachByUUID = PreviewCacheManager.getInstance().setMMKV(this, baseIp).getPreViewCachByUUID(uuid);
+                    if (preViewCachByUUID != null)
+                        url = preViewCachByUUID.getUrl();
+                    JSONObject objectToH5 = new JSONObject();
+                    objectToH5.put("url", url);
+                    objectToH5.put("uuid", uuid);
+                    objectToH5.put(PAGE_NAME_KEY, pageName);
+                    SendEventToHtml5Listener listener = YsPreViewEngine.getInstance().getHtml5Listener();
+                    if (listener != null) {
+                        listener.sendEventToHtml5(EventToName.EVENT_READPREVIEWCACHEURLCOMPLETE, objectToH5);
+                    }
+                    break;
+                case EventToName.EVENT_WRITEPREVIEWCACHEURL:
+                    //写入缓存
+                    uuid = object.getString("uuid");
+                    url = object.getString("url");
+                    PreviewCacheManager.getInstance().setMMKV(this, baseIp).setPreviewCache(new PreviewCacheBean("", uuid, url, ""));
+                    break;
+            }
+        } catch (JSONException e) {
+
+        }
+    }
+
+
 }

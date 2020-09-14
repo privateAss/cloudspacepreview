@@ -10,6 +10,8 @@ import android.view.animation.LinearInterpolator;
 
 import com.tencent.smtt.sdk.TbsVideo;
 import com.ys100.yscloudpreview.R;
+import com.ys100.yscloudpreview.listener.PlayVideoListener;
+import com.ys100.yscloudpreview.manager.YsPreViewEngine;
 
 import java.util.HashMap;
 
@@ -27,21 +29,20 @@ import java.util.HashMap;
 public class FilePreviewIntentFactory {
 
     public static void startAudio(String url, String title, Context context) {
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(url, new HashMap<String, String>());
-        String height = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
-        String width = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);
-        String rotation = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
-        Bundle extraData = new Bundle();
-        extraData.putInt("screenMode", 100);
-        extraData.putString("title", title);
-        TbsVideo.openVideo(context, url, extraData);
+        PlayVideoListener playVideoListener = YsPreViewEngine.getInstance().getPlayVideoListener();
+        if(playVideoListener != null){
+            playVideoListener.onPlayVideo(context,url,title);
+        }else {
+            Bundle extraData = new Bundle();
+            extraData.putInt("screenMode", 102);
+            extraData.putString("title", title);
+            TbsVideo.openVideo(context, url, extraData);
+        }
     }
 
     public static Animation animation(Context context) {
         Animation vAnimationDrawable = AnimationUtils.loadAnimation(context, R.anim.view_wait_progress_dialog);
         LinearInterpolator lin = new LinearInterpolator();
-        //设置旋转速率。LinearInterpolator为匀速效果，Accelerateinterpolator为加速效果
         vAnimationDrawable.setInterpolator(lin);
         return vAnimationDrawable;
     }

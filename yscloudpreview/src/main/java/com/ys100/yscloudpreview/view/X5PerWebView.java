@@ -23,20 +23,20 @@ import com.tencent.smtt.sdk.WebViewClient;
  * <p>
  * ========================================
  */
-public class X5WebView extends WebView {
+public class X5PerWebView extends WebView {
     private Context mContext;
     private WebViewClient client;
     private WebChromeClient chromeClient;
 
-    public X5WebView(Context context) {
+    public X5PerWebView(Context context) {
         this(context, null);
     }
 
-    public X5WebView(Context context, AttributeSet attributeSet) {
+    public X5PerWebView(Context context, AttributeSet attributeSet) {
         this(context, attributeSet, -1);
     }
 
-    public X5WebView(Context context, AttributeSet attributeSet, int i) {
+    public X5PerWebView(Context context, AttributeSet attributeSet, int i) {
         super(context, attributeSet, i);
         init(context);
     }
@@ -50,13 +50,13 @@ public class X5WebView extends WebView {
         initWebViewSettings();
     }
 
-    public X5WebView setClient(WebViewClient client) {
+    public X5PerWebView setClient(WebViewClient client) {
         if (client != null)
             setWebViewClient(client);
         return this;
     }
 
-    public X5WebView setChromeClient(WebChromeClient chromeClient) {
+    public X5PerWebView setChromeClient(WebChromeClient chromeClient) {
         if (chromeClient != null)
             setWebChromeClient(chromeClient);
         return this;

@@ -35,7 +35,7 @@ public class PreviewCacheManager {
 
     public PreviewCacheManager setMMKV(Context context,String baseIp) {
         if (cacheMMkv == null)
-            cacheMMkv = DataManager.getInstance().getPreviewCacheMMKV(context,baseIp);
+            cacheMMkv = PerDataManager.getInstance().getPreviewCacheMMKV(context,baseIp);
         return this;
     }
 

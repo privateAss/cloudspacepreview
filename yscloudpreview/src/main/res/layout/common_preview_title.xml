@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_title"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/title_bg"
+    android:orientation="horizontal">
+    <TextView
+        android:id="@+id/tv_number"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/dim20dp"
+        android:background="@null"
+        android:gravity="center_vertical"
+        android:textColor="@color/text_color_white"
+        android:textSize="@dimen/f15"
+        tools:text="1/4" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:singleLine="true"
+        android:paddingStart="@dimen/dim5dp"
+        android:paddingEnd="@dimen/dim5dp"
+        android:textColor="@color/text_color_white"
+        android:textSize="@dimen/f15"
+        tools:text="语文教学资料" />
+
+    <ImageView
+        android:id="@+id/iv_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dim10dp"
+        android:src="@mipmap/ic_close" />
+</LinearLayout>
